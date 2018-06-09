@@ -21,7 +21,7 @@ namespace hook
 		if (Hook->isHooked) {
 			return false;
 		}
-		hModule = GetModuleHandle(ModuleName);
+		hModule = GetModuleHandleA(ModuleName);
 		if (hModule == NULL) {
 			Hook->isHooked = false;
 			return false;

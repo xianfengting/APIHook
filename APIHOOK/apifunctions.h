@@ -20,13 +20,13 @@ typedef BOOL(WINAPI *fReadProcessMemory)(
 fWriteProcessMemory hookWpm;
 fReadProcessMemory hookRpm;
 
-unsigned long attach(char* pName)
+unsigned long attach(LPCWSTR pName)
 {
 	HANDLE handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(entry);
 	do
-		if (!strcmp(entry.szExeFile, pName)) {
+		if (!lstrcmpW(entry.szExeFile, pName)) {
 			CloseHandle(handle);
 			return entry.th32ProcessID;
 		}
@@ -43,7 +43,7 @@ BOOL WINAPI HookWriteProcessMemory(
 	_Out_ SIZE_T  *lpNumberOfBytesWritten
 	)
 {
-	if (OpenProcess(PROCESS_ALL_ACCESS, false, attach("Helix V3.exe")) == hProcess)
+	if (OpenProcess(PROCESS_ALL_ACCESS, false, attach(L"Helix V3.exe")) == hProcess)
 	{
 		SetLastError(ERROR_ACCESS_DENIED);
 		MessageBoxA(0, "Can't write memory of this process!", "Error!", 0);
@@ -60,7 +60,7 @@ BOOL WINAPI HookReadProcessMemory(
 	_Out_ SIZE_T  *lpNumberOfBytesRead
 	)
 {
-	if (OpenProcess(PROCESS_ALL_ACCESS, false, attach("Helix V3.exe")) == hProcess)
+	if (OpenProcess(PROCESS_ALL_ACCESS, false, attach(L"Helix V3.exe")) == hProcess)
 	{
 		SetLastError(ERROR_ACCESS_DENIED);
 		MessageBoxA(0, "Can't read memory of this process!", "Error!", 0);
